@@ -1,0 +1,9 @@
+Dependencies so far:
+Python 2.6
+Twisted (http://twistedmatrix.com)
+
+Justification for twisted
+- twisted is a framework for writing network servers and can abstract away the intricacies of network programming (asynchronous communication in a threaded environment)
+- it offers flexibility by supporting several transport and application protocols, e.g. UDP, TCP, HTTP
+- having a framework means imposing a structure on the code, meaning room to grow should the server become more complex
+- written in pure python, so no additional dependencies - can be installed through setup.exe (windows) or easy_install
