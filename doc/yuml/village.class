@@ -1,0 +1,7 @@
+[Server]<->[Client]
+[Server]->[Simulation]
+[Simulation]->[World]
+[World]->[Field]
+[World]->[House]
+[World]->[Villager]
+

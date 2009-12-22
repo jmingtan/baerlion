@@ -1,0 +1,6 @@
+[Villager]-(Farming)
+(Farming)<(Sowing)
+(Farming)<(Harvest)
+(Sowing)>(Movement)
+(Harvest)>(Movement) 
+
