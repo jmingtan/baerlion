@@ -1,0 +1,4 @@
+(start)->[Farmer]->(Go to field)-><a>no wheat-><b>no seeds->(Sow grains)->(end),
+<a>wheat->(Harvest wheat)->(end),
+<b>seeded->(Pull weeds)->(end)
+

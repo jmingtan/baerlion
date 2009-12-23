@@ -2,8 +2,61 @@ Dependencies so far:
 Python 2.6
 Twisted (http://twistedmatrix.com)
 
+Networking
+==========
+
 Justification for twisted
 - twisted is a framework for writing network servers and can abstract away the intricacies of network programming (asynchronous communication in a threaded environment)
 - it offers flexibility by supporting several transport and application protocols, e.g. UDP, TCP, HTTP
 - having a framework means imposing a structure on the code, meaning room to grow should the server become more complex
 - written in pure python, so no additional dependencies - can be installed through setup.exe (windows) or easy_install
+
+There are two approaches to writing twisted networking applications, one is to use a supported transport such as TCP and build my own network protocol on top of it. The other is to use twisted's own perspective broker, a serialization and RPC protocol to call methods on the 'other side' directly.
+
+Pros and Cons of each:
+
+Regular protocol
+----------------
++ Clients wishing to access the server use a standard protocol and are not tied to twisted
++ Well supported libraries in every language
+- Have to build custom protocol on top - packing/unpacking data, order of arguments
+
+Perspective Broker
+------------------
++ Serialization and RPC, transfer entire objects
+- Clients are tied to twisted now, meaning clients must use python
+
+Modelling
+=========
+How to model/represent game objects?
+
+Estimated number of game objects:
+
+Map
+---
+1 square mile area (1.6 km^2)
+River
+	- Generate contour map, keep only the lowest points (which form a river)
+Roads
+Fields
+	- Voronoi? (http://en.wikipedia.org/wiki/Voronoi_diagram)
+Houses
+Forest
+Haystacks
+Grassland
+
+Persistence
+===========
+Need a way to store game state
+
+SQLite
+	High performance, embeddable, table-based
+yAML
+	Maps well to objects, needs third party library
+
+Testing
+=======
+Code should be unit-tested, approaches are:
+- http://docs.python.org/library/unittest.html
+- http://docs.python.org/library/doctest.html
+

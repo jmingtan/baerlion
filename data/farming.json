@@ -1,0 +1,9 @@
+{
+    "harvest": {
+        "time": 10
+    }, 
+    "description": "Parameters for the farming occupation", 
+    "sowing": {
+        "time": 5
+    }
+}
