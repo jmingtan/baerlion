@@ -1,4 +1,5 @@
 {
     "description": "Simulation parameters",
-    "total steps": 15
+    "villagers": 10,
+    "day length": 15
 }
