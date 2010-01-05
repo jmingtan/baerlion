@@ -1,3 +1,4 @@
+import time
 import utils
 
 class Data:
@@ -35,9 +36,22 @@ class Simulation(Data):
 
 	def step(self):
 		"""Runs one step of the simulation"""
-		pass
+		print "Step"
+		
+class BaerlionGame(object):
+	def __init__(self):
+		self.sim = Simulation()
+		
+	def run(self):
+		interval = 2
+		while True:
+			start = time.time()
+			while time.time() - start < interval:
+				pass
+			self.update()
+	
+	def update(self):
+		self.sim.step()
 
 if __name__ == '__main__':
-	import doctest
-	doctest.testmod()
-
+	BaerlionGame().run()
