@@ -32,3 +32,21 @@ Soft Design goals
 - A political structure in which NPCs and the player will vie for positions of power
 - Religion system which can be influenced by the player (e.g. become a priest and convert everyone) 
 
+Roadmap (in sequential order)
+
+- Create a basic occupation for the player
+- Villagers exist, can move around
+- Add a basic goal to win the game
+- Relationships and actions which can influence relationships
+- Building construction possible
+- AI can construct buildings
+- More occupations
+- Town council
+- Marketplace
+- Items
+- Game events
+- Religion
+- Lifespan
+- Marriage and children
+- Player stats
+- Quests 
