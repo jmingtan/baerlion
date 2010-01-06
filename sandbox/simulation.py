@@ -32,6 +32,9 @@ class Data:
 			self.__class__.loaded = True
 
 class Simulation(Data):
+	"""A simulation which takes in command/parameter strings
+	"""
+	
 	filename = 'simulation.json'
 	
 	def __init__(self):
@@ -41,6 +44,30 @@ class Simulation(Data):
 		self.villagers = []
 		for i in range(self.__class__.data['villagers']):
 			self.villagers.append(Villager("Villager #%s" % i))
+	
+	def message(self, msg):
+		"""Perform an action based on the command string"""
+		cmd, params = self.parse(msg)
+		if hasattr(self, cmd):
+			func = getattr(self, cmd)
+			if params is None:
+				func()
+			else:
+				func(*params)
+	
+	def parse(self, msg):
+		"""Parse a command string and returns its elements
+		
+		Returns tuple (command, None) if string consists only of the command, otherwise
+		returns (command, params) with command as the first element and list of params
+		as the second.
+		
+		"""
+		elems = msg.split('//')
+		if len(elems) > 1:
+			return (elems[0], elems[1:])
+		else:
+			return (elems[0], None)
 	
 	def step(self):
 		"""Runs one step of the simulation"""

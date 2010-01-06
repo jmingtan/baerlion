@@ -1,14 +1,25 @@
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
 
-class Echo(Protocol):
+from simulation import Simulation
+
+class Passthru(Protocol):
 	def dataReceived(self, data):
-		print data
+		self.factory.simulation.message(data)
+		#print data
 		#self.transport.write(data)
 
-factory = Factory()
-factory.protocol = Echo
+class BaerlionFactory(Factory):
+	
+	protocol = Passthru
+	
+	def __init__(self):
+		self.simulation = Simulation()
 
-reactor.listenTCP(6123, factory)
-reactor.run()
+if __name__ == '__main__':
+	factory = BaerlionFactory()
+	#factory.protocol = Echo
+
+	reactor.listenTCP(6123, factory)
+	reactor.run()
 
