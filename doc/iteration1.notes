@@ -1,3 +1,16 @@
+Notes for Iteration 1
+=====================
+The goals for this iteration are:
+- A number of people exist in the village
+- Only 1 occupation (Farmer) is available
+- Only 1 crop (wheat) is available
+- As you farm, more wheat is put into the storehouse
+- Turn-based, with day-to-day transitions
+- Villagers travel to the fields, and go home at night
+- No player interaction possible (Sim runs on its own)
+- No graphics
+- No movement transitions (villagers move from A to B instantly)
+
 Dependencies so far:
 Python 2.6
 Twisted (http://twistedmatrix.com)

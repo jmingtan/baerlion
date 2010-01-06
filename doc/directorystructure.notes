@@ -1,0 +1,5 @@
+baerlion/   - root
+  data/     - data files for holding game parameters, in JSON format
+  doc/      - documentation and notes for each iteration
+    yuml/   - source code for the online diagram generator at http://yuml.me
+  sandbox/  - prototyping code, constantly in flux

@@ -1,0 +1,6 @@
+- Only 1 occupation (Farmer) is available
+- Only 1 crop (wheat) is available
+- As you farm, more wheat is put into the storehouse
+- Turn-based, with day-to-day transitions
+- Villagers travel to the fields, and go home at night
+- Packaging into binaries
