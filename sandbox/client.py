@@ -1,15 +1,23 @@
 from twisted.internet.protocol import Protocol, ClientCreator
 from twisted.internet import reactor
 
+import utils
+
+UPDATE_PERIOD = 1.0
+
 class Runner(Protocol):
-	def sendMessage(self, msg):
-		self.transport.write(msg)
+    def update(self, msg):
+        print 'sending', msg
+        self.transport.write(msg)
+        self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step")
 
-def gotProtocol(p):
-	p.sendMessage("step")
-	#reactor.callLater(1, p.sendMessage, "This is sent in a sec")
-	reactor.callLater(2, p.transport.loseConnection)
+    def connectionMade(self):
+        self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step")
 
-c = ClientCreator(reactor, Runner)
-c.connectTCP("127.0.0.1", 6123).addCallback(gotProtocol)
-reactor.run()
+    def connectionLost(self, reason):
+        self.updateCall.cancel()
+
+if __name__ == "__main__":
+    c = ClientCreator(reactor, Runner)
+    c.connectTCP("127.0.0.1", 6123)
+    reactor.run()
