@@ -23,12 +23,13 @@ class Data:
         >>> Data.loaded
         True
         """
-        if file is None and self.__class__.loaded is False:
-            file = self.__class__.filename
-        if len(file) > 0 and self.__class__.loaded is False:
-            self.__class__.data = utils.loadData(file)
-            self.__class__.filename = file
-            self.__class__.loaded = True
+        if self.__class__.data is None:
+            if file is None and self.__class__.loaded is False:
+                file = self.__class__.filename
+            if len(file) > 0 and self.__class__.loaded is False:
+                self.__class__.data = utils.loadData(file)
+                self.__class__.filename = file
+                self.__class__.loaded = True
 
 class Simulation(Data):
     """A simulation which takes in command/parameter strings
@@ -76,21 +77,144 @@ class Simulation(Data):
             self.steps = 0
         print "Day %d, Step %d" % (self.days, self.steps)
         for villager in self.villagers:
-            villager.update(self.days, self.days)
-            print "%s at %s doing %s" % (villager.name, villager.location, villager.action)
+            villager.update(self.days, self.steps)
+            print villager
 
 class Villager(Data):
     filename = 'villager.json'
 
     def __init__(self, name):
-        #self.__load__()
+        self.__load__()
         self.name = name
         self.action = None
-        self.location = None
+        self.workplace = Field("%s's field" % self.name) 
+        self.home = Home("%s's home" % self.name)
+        self.location = self.home
+        self.occupation = Farmer()
+
+    def __str__(self):
+        return "%s is at %s %s" % (self.name, self.location, self.action)
 
     def update(self, days, steps):
         """Tells a villager to do something at his current location"""
+        start_time = self.__class__.data['start time']
+        end_time = self.__class__.data['end time']
+        if steps >= start_time and steps <= end_time:
+            self.location = self.workplace
+            self.action = self.occupation.update(self.location)
+        else:
+            self.action = 'resting'
+            self.location = self.home
+
+class Home(Data):
+    """A simple residence"""
+
+    def __init__(self, name):
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+class Field(Data):
+    """Describes the behaviour of a crop"""
+    filename = 'farming.json'
+
+    def _fallow(self, days):
+        """Crop is lying fallow"""
         pass
+
+    def _sown(self, days):
+        """Crop has been sown with grain"""
+        weed_time = self.__class__.data['sowing']['weed_time']
+        if weed_time >= days - self._weeded_date:
+            self._state = Field.states['weeds']
+        else:
+            self.bounty += 1
+
+    def _weeds(self, days):
+        """Crop has been overgrown with weeds"""
+        self.bounty -= 1
+
+    def _ripe(self, days):
+        """Crop is ripe for harvest"""
+        pass
+
+    states = {
+        'fallow': _fallow,
+        'sown': _sown,
+        'weeds': _weeds,
+        'ripe': _ripe,
+    }
+
+    def __init__(self, name):
+        self.__load__()
+        self._state = Field.states['fallow']
+        self._sown_date = 0
+        self._weeded_date = 0
+        self._harvest_date = 0
+        self._day = 0
+        self.bounty = 0
+        self.name = name
+
+    def __str__(self):
+        return self.name
+
+    def harvest(self, days):
+        """Harvest wheat, returns some amount of wheat"""
+        self._state = Field.states['fallow']
+        self._harvest_date = days
+        bounty, self.bounty = self.bounty, 0
+        return bounty
+
+    def sow(self):
+        """Sow grain"""
+        self._sown_date = self._day
+        self._state = Field.states['sown']
+
+    def weed(self):
+        """Pull weeds"""
+        self._weeded_date = self._day
+        self._state = Field.states['sown']
+
+    def update(self, days):
+        """Crop changes depending on the time and actions taken on it"""
+        self._state(self, days)
+
+class Farmer(Data):
+    """Describes the farming occupation"""
+    filename = 'farming.json'
+
+    def _fallow(self, field):
+        field.sow()
+        return 'sowing'
+
+    def _sown(self, field):
+        field.weed()
+        return 'pulling weeds'
+
+    def _weeds(self, field):
+        field.weed()
+        return 'pulling weeds'
+
+    def _ripe(self, field):
+        field.harvest()
+        return 'harvesting'
+
+    responses = {
+        Field.states['fallow']: _fallow,
+        Field.states['sown']: _sown,
+        Field.states['weeds']: _weeds,
+        Field.states['ripe']: _ripe,
+    }
+
+    def __init__(self):
+        self.__load__()
+
+    def update(self, location):
+        """Figures out what to do at a given location, returns an action"""
+        if hasattr(location, 'harvest'):
+            field = location
+            return Farmer.responses[field._state](self, field)
 
 class BaerlionGame(Data):
     filename = 'baerlion.json'

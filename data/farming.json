@@ -1,9 +1,12 @@
 {
     "harvest": {
-        "time": 10
-    }, 
-    "description": "Parameters for the farming occupation", 
+        "time": 3,
+        "description": "Harvest ready - Time to wait for the fields to become fallow again!"
+    },
+    "description": "Parameters for the farming occupation",
     "sowing": {
-        "time": 5
+        "time": 10,
+        "weed-time": 2,
+        "description": "Take care of this crop while it grows and you'll be rewarded"
     }
 }
