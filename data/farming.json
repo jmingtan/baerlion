@@ -1,13 +1,13 @@
 {
-    "harvest": {
-        "time": 3,
+    "harvesting": {
+        "actions needed per day": 9,
         "description": "Harvest ready - Time to wait for the fields to become fallow again!"
     },
     "description": "Parameters for the farming occupation",
     "sowing": {
-        "time before harvest": 10,
-        "time before weeds": 2,
-        "actions needed per day": 5,
+        "days before harvest": 10,
+        "days before weeds": 2,
+        "actions needed per day": 8,
         "description": "Take care of this crop while it grows and you'll be rewarded"
     },
     "weeding": {

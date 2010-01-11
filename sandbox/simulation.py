@@ -42,8 +42,9 @@ class Simulation(Data):
         self.steps = 0
         self.days = 0
         self.villagers = []
+        self.location_factory = LocationFactory()
         for i in range(self.__class__.data['villagers']):
-            self.villagers.append(Villager("Villager #%s" % i))
+            self.villagers.append(Villager("Villager #%s" % i, self.location_factory))
 
     def message(self, msg):
         """Perform an action based on the command string"""
@@ -70,27 +71,71 @@ class Simulation(Data):
             return (elems[0], None)
 
     def step(self):
-        """Runs one step of the simulation"""
+        """Runs one step of the simulation
+
+        For every step, the order of updating is:
+            1. Locations
+            2. Villagers
+        """
         self.steps += 1
         if self.steps == self.__class__.data['day length']:
             self.days += 1
             self.steps = 0
         print "Day %d, Step %d" % (self.days, self.steps)
+
+        self.location_factory.update(self.days, self.steps)
         for villager in self.villagers:
             villager.update(self.days, self.steps)
             print villager
 
+class LocationFactory(object):
+    """Takes care of location life cycle
+
+    If any location managed by LocationFactory implements an update method,
+    it must follow the signature update(days, steps) where days is the
+    number of days and steps is the time within a day.
+    """
+
+    def __init__(self):
+        self.locations = []
+
+    def update(self, days, steps):
+        for locale in self.locations:
+            if hasattr(locale, 'update'):
+                locale.update(days, steps)
+
+    def get_home(self, name):
+        home = Home(name)
+        self.locations.append(home)
+        return home
+
+    def get_field(self, name):
+        field = Field(name)
+        self.locations.append(field)
+        return field
+
+    def get_granary(self):
+        if hasattr(self.__class__, '_granary'):
+            return self.__class__._granary
+        else:
+            granary = Granary()
+            self.__class__.granary = granary
+            self.locations.append(granary)
+            return self.__class__.granary
+
 class Villager(Data):
     filename = 'villager.json'
 
-    def __init__(self, name):
+    def __init__(self, name, location_factory):
         self.__load__()
         self.name = name
         self.action = None
-        self.workplace = Field("%s's field" % self.name) 
-        self.home = Home("%s's home" % self.name)
+        self.home = location_factory.get_home("%s's home" % self.name)
         self.location = self.home
-        self.occupation = Farmer()
+        self.occupation = Farmer(
+            location_factory.get_field("%s's field" % self.name),
+            location_factory.get_granary()
+        )
 
     def __str__(self):
         return "%s is at %s %s." % (self.name, self.location, self.action)
@@ -100,7 +145,7 @@ class Villager(Data):
         start_time = self.__class__.data['start time']
         end_time = self.__class__.data['end time']
         if steps >= start_time and steps <= end_time:
-            self.location = self.workplace
+            self.location = self.occupation.workplace
             self.action = self.occupation.update(self.location)
         else:
             self.action = 'resting'
@@ -130,13 +175,13 @@ class Field(Data):
         After some time, the crop will be ready for harvest.
 
         """
-        weed_time = self.__class__.data['sowing']['time before weeds']
+        weed_time = self.__class__.data['sowing']['days before weeds']
         if days - self._weeded_date >= weed_time :
             self._state = Field.states['weeds']
             print "%s has been overgrown with weeds." % self.name
         else:
             self.bounty += 1
-        harvest_time = self.__class__.data['sowing']['time before harvest']
+        harvest_time = self.__class__.data['sowing']['days before harvest']
         if days - self._sown_date >= harvest_time:
             self._state = Field.states['ripe']
             print "%s is now ripe for harvest." % self.name
@@ -162,7 +207,7 @@ class Field(Data):
         self._sown_date = 0
         self._weeded_date = 0
         self._harvest_date = 0
-        self._day = 0
+        self._today = 0
         self._actions_performed_today = 0
         self.bounty = 0
         self.name = name
@@ -178,29 +223,45 @@ class Field(Data):
             return True
         return False
 
-    def harvest(self, days):
-        """Harvest wheat, returns some amount of wheat"""
-        self._state = Field.states['fallow']
-        self._harvest_date = days
-        bounty, self.bounty = self.bounty, 0
-        return bounty
+    def _transition(self, days):
+        """A day has passed in the life of this field
+
+        Weeds grow overnight in the field, erasing any partial effort made.
+        """
+        self._today = days
+        self._actions_performed_today = 0
+
+    def harvest(self):
+        """Harvest wheat, returns some amount of wheat
+
+        Returns None if harvesting is still in progress.
+        """
+        if self._allow(self.__class__.data['harvesting']['actions needed per day']):
+            self._harvest_date = self._today
+            bounty, self.bounty = self.bounty, 0
+            self._state = Field.states['fallow']
+            print 'Field is now fallow.'
+            return bounty
+        return None
 
     def sow(self):
         """Sow grain"""
         if self._allow(self.__class__.data['sowing']['actions needed per day']):
-            self._sown_date = self._day
+            self._sown_date = self._today
             self._state = Field.states['sown']
             print "%s has now been sown with grain." % self.name
 
     def weed(self):
         """Pull weeds"""
         if self._allow(self.__class__.data['weeding']['actions needed per day']):
-            self._weeded_date = self._day
+            self._weeded_date = self._today
             self._state = Field.states['sown']
             print "%s has now been cleared of weeds." % self.name
 
-    def update(self, days):
+    def update(self, days, steps):
         """Crop changes depending on the time and actions taken on it"""
+        if self._today != days:
+            self._transition(days)
         self._state(self, days)
 
 class Farmer(Data):
@@ -220,24 +281,42 @@ class Farmer(Data):
         return 'pulling weeds'
 
     def _ripe(self, field):
-        field.harvest()
+        bounty = field.harvest()
+        if bounty is not None:
+            self.inventory = bounty
+            self.workplace = self.granary
+            return "has harvested %d units of grain" % self.inventory
         return 'harvesting'
+
+    def _store(self, granary, inventory):
+        granary.store(inventory)
+        self.workplace = self.field
+        return 'storing grain at the granary'
 
     responses = {
         Field.states['fallow']: _fallow,
         Field.states['sown']: _sown,
         Field.states['weeds']: _weeds,
         Field.states['ripe']: _ripe,
+        'granary': _store,
     }
 
-    def __init__(self):
+    def __init__(self, field, granary):
         self.__load__()
+        self.field = field
+        self.granary = granary
+        self.workplace = field
+        self.inventory = 0
 
     def update(self, location):
         """Figures out what to do at a given location, returns an action"""
         if hasattr(location, 'harvest'):
             field = location
             return Farmer.responses[field._state](self, field)
+        if hasattr(location, 'store'):
+            granary = location
+            inventory, self.inventory = self.inventory, 0
+            return Farmer.responses['granary'](self, granary, inventory)
 
 class Granary(Data):
     """Describes a granary for the village"""
@@ -247,6 +326,9 @@ class Granary(Data):
     def __init__(self):
         self.__load__()
         self.amount = 0
+
+    def __str__(self):
+        return 'the granary'
 
     def store(self, amount):
         limit = self.__class__.data['limit']
