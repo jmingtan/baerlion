@@ -1,4 +1,4 @@
 {
     "description": "Game parameters",
-    "interval": 2
+    "seconds per step": 2
 }

@@ -247,7 +247,7 @@ class Field(Data):
     def sow(self):
         """Sow grain"""
         if self._allow(self.__class__.data['sowing']['actions needed per day']):
-            self._sown_date = self._today
+            self._sown_date = self._weeded_date = self._today
             self._state = Field.states['sown']
             print "%s has now been sown with grain." % self.name
 
@@ -346,7 +346,7 @@ class BaerlionGame(Data):
         self.sim = Simulation()
 
     def run(self):
-        interval = self.__class__.data['interval']
+        interval = self.__class__.data['seconds per step']
         while True:
             utils.wait(interval)
             self.update()
