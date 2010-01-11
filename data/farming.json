@@ -5,8 +5,13 @@
     },
     "description": "Parameters for the farming occupation",
     "sowing": {
-        "time": 10,
-        "weed-time": 2,
+        "time before harvest": 10,
+        "time before weeds": 2,
+        "actions needed per day": 5,
         "description": "Take care of this crop while it grows and you'll be rewarded"
+    },
+    "weeding": {
+        "actions needed per day": 5,
+        "description": "Overgrown with weeds - get rid of them or your crop will be ruined!"
     }
 }
