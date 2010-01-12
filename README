@@ -4,9 +4,9 @@ Currently a console application written in python.
 Has both a standalone mode and a client-server mode.
 
 Running the simulation in standalone mode:
-- (from sandbox dir) python simulation.py
+- (from src dir) python simulation.py
 
 Running the simulation in client-server mode:
 - requires twisted networking library (http://twistedmatrix.com)
-- (from sandbox dir) python server.py
+- (from src dir) python server.py
 - (open another terminal) python client.py
