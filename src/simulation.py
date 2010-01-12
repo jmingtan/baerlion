@@ -27,7 +27,7 @@ class Data:
             if file is None and self.__class__.loaded is False:
                 file = self.__class__.filename
             if len(file) > 0 and self.__class__.loaded is False:
-                self.__class__.data = utils.loadData(file)
+                self.__class__.data = utils.load_data(file)
                 self.__class__.filename = file
                 self.__class__.loaded = True
 

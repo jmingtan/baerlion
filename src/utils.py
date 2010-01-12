@@ -5,13 +5,13 @@ import time
 
 DATA_DIR = "data"
 
-def findDir(name):
+def find_dir(name):
     """Recursively search parent directories until a match is found
 
     Returns absolute pathname of the directory, None otherwise.
     Stops when the root directory has been reached.
 
-    >>> findDir('data')
+    >>> find_dir('data')
     'c:/baerlion/data'
     """
     cwd = os.getcwd()
@@ -21,13 +21,13 @@ def findDir(name):
             return path
         cwd = os.path.split(cwd)[0]
 
-def loadData(filename):
+def load_data(filename):
     """Maps a filename to the data directory and loads it as JSON data
 
-    >>> loadData('simulation.json')
+    >>> load_data('simulation.json')
     ['sample data']
     """
-    file = os.path.join(findDir(DATA_DIR), filename)
+    file = os.path.join(find_dir(DATA_DIR), filename)
     with open(file) as f:
         return json.loads(f.read())
 
