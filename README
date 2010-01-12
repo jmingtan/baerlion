@@ -10,3 +10,8 @@ Running the simulation in client-server mode:
 - requires twisted networking library (http://twistedmatrix.com)
 - (from src dir) python server.py
 - (open another terminal) python client.py
+
+To run unit tests:
+- requires nosetests (http://somethingaboutorange.com/mrl/projects/nose/)
+- (from root dir) nosetests
+
