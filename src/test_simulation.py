@@ -1,22 +1,25 @@
 import time
-
+from random import random
 from nose import with_setup
+
 import simulation
 
-class TestFarmer():
+class TestFarmer:
     @classmethod
     def setup_class(self):
         self.farmer = simulation.Farmer(None, None)
+        self.old_responses = simulation.Farmer.responses
 
     @classmethod
     def teardown_class(self):
         self.farmer = None
+        simulation.Farmer.responses = self.old_responses
 
     def test_ripe(self):
         bounty = 10
         farmer = self.farmer
         assert farmer.inventory == 0
-        class Field():
+        class Field:
             def harvest(self):
                 self.harvest_called = True
                 return bounty
@@ -25,7 +28,71 @@ class TestFarmer():
         assert field.harvest_called
         assert farmer.inventory == bounty
 
-class TestGranary():
+    def test_fallow(self):
+        farmer = self.farmer
+        class Field:
+            def sow(self):
+                self.sow_called = True
+        field = Field()
+        farmer._fallow(field)
+        assert field.sow_called
+
+    def test_sown(self):
+        farmer = self.farmer
+        class Field:
+            def weed(self):
+                self.weed_called = True
+        field = Field()
+        farmer._sown(field)
+        assert field.weed_called
+
+    def test_weeds(self):
+        farmer = self.farmer
+        class Field:
+            def weed(self):
+                self.weed_called = True
+        field = Field()
+        farmer._weeds(field)
+        assert field.weed_called
+
+    def test_store(self):
+        farmer = self.farmer
+        farmer.workplace, farmer.field = 1, 2
+        class Granary:
+            def store(self, i):
+                self.i = i
+        granary = Granary()
+        inventory = 10
+        farmer._store(granary, inventory)
+        assert granary.i == inventory
+        assert farmer.field == farmer.workplace
+
+    def test_update_with_harvest(self):
+        class HarvestLocation:
+            def __init__(self):
+                self._state = 'state'
+            def harvest(self):
+                pass
+        farmer = self.farmer
+        expected = random()
+        responses = {'state': lambda x, y: expected}
+        farmer.__class__.responses = responses
+        harvest_loc = HarvestLocation()
+        assert farmer.update(harvest_loc) == expected
+
+    def test_update_with_store(self):
+        class StoreLocation:
+            def store(self):
+                pass
+        expected_inventory = 10
+        responses = {'granary': lambda x, y, z: (y, z)}
+        farmer = self.farmer
+        farmer.__class__.responses = responses
+        farmer.inentory = expected_inventory
+        store_loc = StoreLocation()
+        assert farmer.update(store_loc) == (store_loc, expected_inventory)
+
+class TestGranary:
     @classmethod
     def setup_class(self):
         self.granary = simulation.Granary()
