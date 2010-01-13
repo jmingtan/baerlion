@@ -1,16 +1,13 @@
-import time
 from random import random
-from nose import with_setup
 
 import simulation
 
 class TestField:
-    @classmethod
-    def setup_class(self):
+    def setup(self):
         self.field = simulation.Field(None)
+        assert self.field.bounty == 0
 
-    @classmethod
-    def teardown_class(self):
+    def teardown(self):
         self.field = None
 
     def test_sown_with_weeds(self):
@@ -34,14 +31,30 @@ class TestField:
         field._sown(days)
         assert field._state == field.__class__.states['ripe']
 
+    def test_weeds(self):
+        field = self.field
+        assert field.bounty == 0
+        field._weeds(None)
+        assert field.bounty == -1
+
+    def test_update(self):
+        expected_days = 2
+        def transition(result):
+            assert result == expected_days
+        def state(self, result):
+            assert result == expected_days
+        field = self.field
+        field._today = 1
+        field._transition = transition
+        field._state = state
+        field.update(expected_days, None)
+
 class TestFarmer:
-    @classmethod
-    def setup_class(self):
+    def setup(self):
         self.farmer = simulation.Farmer(None, None)
         self.old_responses = simulation.Farmer.responses
 
-    @classmethod
-    def teardown_class(self):
+    def teardown(self):
         self.farmer = None
         simulation.Farmer.responses = self.old_responses
 
@@ -118,7 +131,7 @@ class TestFarmer:
         responses = {'granary': lambda x, y, z: (y, z)}
         farmer = self.farmer
         farmer.__class__.responses = responses
-        farmer.inentory = expected_inventory
+        farmer.inventory = expected_inventory
         store_loc = StoreLocation()
         assert farmer.update(store_loc) == (store_loc, expected_inventory)
 
