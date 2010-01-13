@@ -124,6 +124,8 @@ class LocationFactory(object):
             return self.__class__.granary
 
 class Villager(Data):
+    """A simple villager"""
+
     filename = 'villager.json'
 
     def __init__(self, name, location_factory):
@@ -339,6 +341,8 @@ class Granary(Data):
             print "The granary now has %s units of grain." % self.amount
 
 class BaerlionGame(Data):
+    """Allows standalone mode for baerlion"""
+
     filename = 'baerlion.json'
 
     def __init__(self):

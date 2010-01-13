@@ -1,2 +1,8 @@
 - Packaging into binaries
 - Unit tests
+
+Goals for unit tests
+--------------------
+- Concentrate on complex functions
+- Don't aim for 100%
+- Isolated
