@@ -177,14 +177,12 @@ class Field(Data):
         After some time, the crop will be ready for harvest.
 
         """
-        weed_time = self.__class__.data['sowing']['days before weeds']
-        if days - self._weeded_date >= weed_time :
+        if days - self._weeded_date >= self._weed_time :
             self._state = Field.states['weeds']
             print "%s has been overgrown with weeds." % self.name
         else:
             self.bounty += 1
-        harvest_time = self.__class__.data['sowing']['days before harvest']
-        if days - self._sown_date >= harvest_time:
+        if days - self._sown_date >= self._harvest_time:
             self._state = Field.states['ripe']
             print "%s is now ripe for harvest." % self.name
 
@@ -205,6 +203,8 @@ class Field(Data):
 
     def __init__(self, name):
         self.__load__()
+        self._weed_time = self.__class__.data['sowing']['days before weeds']
+        self._harvest_time = self.__class__.data['sowing']['days before harvest']
         self._state = Field.states['fallow']
         self._sown_date = 0
         self._weeded_date = 0

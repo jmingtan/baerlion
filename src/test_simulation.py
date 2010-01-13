@@ -4,6 +4,36 @@ from nose import with_setup
 
 import simulation
 
+class TestField:
+    @classmethod
+    def setup_class(self):
+        self.field = simulation.Field(None)
+
+    @classmethod
+    def teardown_class(self):
+        self.field = None
+
+    def test_sown_with_weeds(self):
+        field = self.field
+        days = 10
+        field._state = field.__class__.states['sown']
+        field._weed_time = 5
+        field._weeded_date = 5
+        field._sown_date = field._harvest_time = days
+        field._sown(days)
+        assert field._state == field.__class__.states['weeds']
+
+    def test_sown_and_now_ripe(self):
+        field = self.field
+        days = 10
+        field._state = field.__class__.states['sown']
+        field._weed_time = days
+        field._weeded_date = days
+        field._sown_date = 5
+        field._harvest_time = 5
+        field._sown(days)
+        assert field._state == field.__class__.states['ripe']
+
 class TestFarmer:
     @classmethod
     def setup_class(self):
