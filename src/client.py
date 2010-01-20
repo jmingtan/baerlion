@@ -1,8 +1,6 @@
 from twisted.internet.protocol import Protocol, ClientCreator
 from twisted.internet import reactor
 
-import utils
-
 UPDATE_PERIOD = 1.0
 
 class Runner(Protocol):
