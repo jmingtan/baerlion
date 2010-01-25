@@ -7,10 +7,10 @@ class Runner(Protocol):
     def update(self, msg):
         print 'sending', msg
         self.transport.write(msg)
-        self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step")
+        self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step\n")
 
     def connectionMade(self):
-        self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step")
+        self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step\n")
 
     def connectionLost(self, reason):
         self.updateCall.cancel()

@@ -5,6 +5,7 @@ from simulation import Simulation
 
 class Passthru(Protocol):
     def dataReceived(self, data):
+        data = data.strip()
         print 'received', data
         self.factory.simulation.message(data)
 
