@@ -1,13 +1,16 @@
 from twisted.internet.protocol import Protocol, Factory
 from twisted.internet import reactor
+import sys
 
 from simulation import Simulation
 
 class Passthru(Protocol):
     def dataReceived(self, data):
         data = data.strip()
-        print 'received', data
         self.factory.simulation.message(data)
+
+    def connectionMade(self):
+        sys.stdout = self.transport
 
 class BaerlionFactory(Factory):
     protocol = Passthru

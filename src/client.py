@@ -9,6 +9,10 @@ class Runner(Protocol):
         self.transport.write(msg)
         self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step\n")
 
+    def dataReceived(self, data):
+        data = data.strip()
+        print 'received', data
+
     def connectionMade(self):
         self.updateCall = reactor.callLater(UPDATE_PERIOD, self.update, "step\n")
 

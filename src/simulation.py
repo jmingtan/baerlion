@@ -81,7 +81,7 @@ class Simulation(Data):
         if self.steps == self.__class__.data['day length']:
             self.days += 1
             self.steps = 0
-        print "Day %d, Step %d" % (self.days, self.steps)
+        print "Day {%d}, Step {%d}" % (self.days, self.steps)
 
         self.location_factory.update(self.days, self.steps)
         for villager in self.villagers:
@@ -140,7 +140,7 @@ class Villager(Data):
         )
 
     def __str__(self):
-        return "%s is at %s %s." % (self.name, self.location, self.action)
+        return "{%s} is at {%s} and is {%s}." % (self.name, self.location, self.action)
 
     def update(self, days, steps):
         """Tells a villager to do something at his current location"""
@@ -179,12 +179,12 @@ class Field(Data):
         """
         if days - self._weeded_date >= self._weed_time :
             self._state = Field.states['weeds']
-            print "%s has been overgrown with weeds." % self.name
+            print "{%s} has been overgrown with weeds." % self.name
         else:
             self.bounty += 1
         if days - self._sown_date >= self._harvest_time:
             self._state = Field.states['ripe']
-            print "%s is now ripe for harvest." % self.name
+            print "{%s} is now ripe for harvest." % self.name
 
     def _weeds(self, days):
         """Crop has been overgrown with weeds"""
@@ -242,7 +242,7 @@ class Field(Data):
             self._harvest_date = self._today
             bounty, self.bounty = self.bounty, 0
             self._state = Field.states['fallow']
-            print 'Field is now fallow.'
+            print "{%s} is now {fallow}." % self
             return bounty
         return None
 
@@ -251,14 +251,14 @@ class Field(Data):
         if self._allow(self.__class__.data['sowing']['actions needed per day']):
             self._sown_date = self._weeded_date = self._today
             self._state = Field.states['sown']
-            print "%s has now been sown with grain." % self.name
+            print "{%s} has now been {sown}." % self
 
     def weed(self):
         """Pull weeds"""
         if self._allow(self.__class__.data['weeding']['actions needed per day']):
             self._weeded_date = self._today
             self._state = Field.states['sown']
-            print "%s has now been cleared of weeds." % self.name
+            print "{%s} has now been {weeded}." % self.name
 
     def update(self, days, steps):
         """Crop changes depending on the time and actions taken on it"""
@@ -335,10 +335,10 @@ class Granary(Data):
     def store(self, amount):
         limit = self.__class__.data['limit']
         if self.amount + amount > limit:
-            print "The granary has too much grain, unable to store anymore!"
+            print "{%s} has too much grain, unable to store anymore!" % self
         else:
             self.amount += amount
-            print "The granary now has %s units of grain." % self.amount
+            print "{%s} now has {%s} units of grain." % (self, self.amount)
 
 class BaerlionGame(Data):
     """Allows standalone mode for baerlion"""
