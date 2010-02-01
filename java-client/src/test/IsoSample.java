@@ -10,7 +10,7 @@ import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
  
-public class IsoTest implements Game {
+public class IsoSample implements Game {
 	SpriteSheet spriteSheet = null;
 
 	public void init(GameContainer gc) throws SlickException {
@@ -36,6 +36,6 @@ public class IsoTest implements Game {
 	public boolean closeRequested() { return true; }
  
 	public static void main(String[] args) throws SlickException {
-		new AppGameContainer(new IsoTest()).start();
+		new AppGameContainer(new IsoSample()).start();
 	}
 }
