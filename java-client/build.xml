@@ -11,7 +11,7 @@
 	<property name="lib.test" value="${dir.lib}/test" />
 	<property name="lib.natives" value="${dir.lib}/natives" />
 
-	<property name="main" value="baerlion.tools.TileViewer" />
+	<property name="main" value="baerlion.BaerlionGame" />
 	<property name="jarfile" value="baerlion.jar" />
 	<property name="distfile" value="baerlion.zip" />
 	

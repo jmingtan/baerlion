@@ -35,11 +35,15 @@ public class BaerlionClient {
 		} catch (IOException e) { }
 	}
 
-	public void run() {
+	public String run() {
 		if (connected && System.currentTimeMillis() - startTime > 1000) {
 			startTime = System.currentTimeMillis();
 			out.println("step");
 		}
-		//if (connected && in.ready())
+		try {
+			if (connected && in.ready())
+				return in.readLine();
+		} catch (IOException e) {e.printStackTrace();}
+		return null;
 	}
 }
