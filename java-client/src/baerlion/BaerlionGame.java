@@ -1,5 +1,8 @@
 package baerlion;
 
+import java.util.List;
+import java.util.Vector;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Game;
@@ -7,32 +10,37 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.SpriteSheet;
- 
-public class BaerlionGame implements Game {
+import org.newdawn.slick.util.InputAdapter;
+
+import baerlion.ui.Button;
+
+public class BaerlionGame extends InputAdapter implements Game {
 	final BaerlionClient client;
 	final BaerlionView view;
-
-	SpriteSheet spriteSheet = null;
-	Image sprite = null;
-	Image sprite2 = null;
+	final List<Button> buttons;
+	final List<Image> uiImages;
 
 	public BaerlionGame() {
 		client = new BaerlionClient();
 		view = new BaerlionView();
+		buttons = new Vector<Button>();
+		uiImages = new Vector<Image>();
 	}
  
 	public void init(GameContainer gc) throws SlickException {
 		client.init();
-		spriteSheet = new SpriteSheet("iso-64x64-outside.png", 64, 64);
-		sprite = spriteSheet.getSprite(0, 0);
-		sprite2 = spriteSheet.getSprite(5, 0);
+		createButton("control_play_blue.png", 200, 10, 30, 30);
 	}
  
 	public void update(GameContainer gc, int delta) throws SlickException {
 		String response = client.run();
 		if (response != null)
 			view.parse(response);
+	}
+
+	public void createButton(String filename, int x, int y, int w, int h) throws SlickException {
+		buttons.add(new Button(x, y, w, h));
+		uiImages.add(new Image(filename));
 	}
 
 	public void fillRect(Graphics g, Color color, int x, int y, int w, int h) {
@@ -46,11 +54,9 @@ public class BaerlionGame implements Game {
 		fillRect(g, Color.green, 0, 0, gc.getWidth(), gc.getHeight());
 		for (ImageWrapper i : view.renderList)
 			i.draw();
-		//sprite.draw(0, 0);
-		//sprite2.draw(32, 16);
-		//sprite2.draw(64, 0);
-		//sprite.draw(0, 32);
-		//sprite2.draw(64, 32);
+		int count = 0;
+		for (Button b : buttons)
+			uiImages.get(count++).draw(b.x, b.y, b.w, b.h);
 	}
 
 	public String getTitle() {
@@ -62,6 +68,12 @@ public class BaerlionGame implements Game {
 		return true;
 	}
  
+	@Override public void mousePressed(int button, int x, int y) {
+		for (Button b : buttons)
+			if (b.click(x, y))
+				System.out.println("button clicked!");
+	}
+
 	public static void main(String[] args) throws SlickException {
 		new AppGameContainer(new BaerlionGame()).start();
 	}
