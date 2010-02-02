@@ -3,11 +3,17 @@ package baerlion;
 import java.util.List;
 import java.util.Vector;
 
+import baerlion.models.Villager;
+
 public class BaerlionView {
 	public final List<ImageWrapper> renderList;
+	public final List<Villager> villagers;
+	public int day;
+	public int step;
 
 	public BaerlionView() {
 		renderList = new Vector<ImageWrapper>();
+		villagers = new Vector<Villager>();
 	}
 
 	protected List<String> getElements(String response) {
@@ -49,5 +55,20 @@ public class BaerlionView {
 
 	public void parse(String response) {
 		System.out.println("Response: " + response);
+		if (response.startsWith("Day"))
+			parseDay(response);
+		else if (response.contains("is at") && response.contains("and is"))
+			parseVillager(response);
+	}
+
+	protected void parseDay(String dayString) {
+		String[] elements = getElements(dayString).toArray(new String[0]);
+		this.day = Integer.parseInt(elements[1]);
+		this.step = Integer.parseInt(elements[3]);
+	}
+
+	protected void parseVillager(String villagerString) {
+		String[] elements = getElements(villagerString).toArray(new String[0]);
+		this.villagers.add(new Villager(elements[0], elements[2], elements[4]));
 	}
 }

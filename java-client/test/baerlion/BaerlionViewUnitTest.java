@@ -4,11 +4,48 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+import baerlion.models.Villager;
+
 public class BaerlionViewUnitTest {
 	private BaerlionView object = null;
 
 	@Before public void before() {
 		object = new BaerlionView();
+	}
+
+	@Test public void parseDay() {
+		int expectedDay = 1;
+		int expectedStep = 4;
+		String testString = "Day {"+expectedDay+"}, Step {"+expectedStep+"}";
+
+		object.parseDay(testString);
+
+		assertEquals(
+				"Day value not set correctly",
+				expectedDay, object.day);
+		assertEquals(
+				"Step value not set correctly",
+				expectedStep, object.step);
+	}
+
+	@Test public void parseVillager() {
+		String name = "Villager #2";
+		String location = name + "'s field";
+		String action = "sowing";
+		String testString = "{"+name+"} is at {"+location+"} and is {"+action+"}.";
+		Villager expected = new Villager(name, location, action);
+
+		object.parseVillager(testString);
+
+		assertEquals(
+				"Name does not match",
+				name, object.villagers.get(0).name);
+		assertEquals(
+				"Location does not match",
+				location, object.villagers.get(0).location);
+		assertEquals(
+				"Action does not match",
+				action, object.villagers.get(0).action);
 	}
 
 	@Test public void testGetElements() {
