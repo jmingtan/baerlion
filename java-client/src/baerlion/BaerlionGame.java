@@ -9,6 +9,7 @@ import org.newdawn.slick.Game;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.UnicodeFont;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.InputAdapter;
 
@@ -19,6 +20,8 @@ public class BaerlionGame extends InputAdapter implements Game {
 	final BaerlionView view;
 	final List<Button> buttons;
 	final List<Image> uiImages;
+	UnicodeFont hudFont = null;
+	UnicodeFont consoleFont = null;
 
 	public BaerlionGame() {
 		client = new BaerlionClient();
@@ -29,6 +32,8 @@ public class BaerlionGame extends InputAdapter implements Game {
  
 	public void init(GameContainer gc) throws SlickException {
 		client.init();
+		hudFont = getFont("GoudyBookletter1911.otf", "goudy.hiero");
+		consoleFont = getFont("mplus-1p-regular.ttf", "mplus.hiero");
 		createButton("control_play_blue.png", 200, 10, 30, 30);
 	}
  
@@ -36,6 +41,13 @@ public class BaerlionGame extends InputAdapter implements Game {
 		String response = client.run();
 		if (response != null)
 			view.parse(response);
+	}
+
+	public UnicodeFont getFont(String fontFile, String hieroFile) throws SlickException {
+		UnicodeFont font = new UnicodeFont(fontFile, hieroFile);
+		font.addAsciiGlyphs();
+		font.loadGlyphs();
+		return font;
 	}
 
 	public void createButton(String filename, int x, int y, int w, int h) throws SlickException {
@@ -57,6 +69,9 @@ public class BaerlionGame extends InputAdapter implements Game {
 		int count = 0;
 		for (Button b : buttons)
 			uiImages.get(count++).draw(b.x, b.y, b.w, b.h);
+		String timeString = "Day " + view.day + ", Step " + view.step;
+		hudFont.drawString(400, 10, timeString, Color.red);
+		consoleFont.drawString(100, 400, "testString", Color.red);
 	}
 
 	public String getTitle() {
@@ -64,6 +79,8 @@ public class BaerlionGame extends InputAdapter implements Game {
 	}
 
 	public boolean closeRequested() {
+		hudFont.destroy();
+		consoleFont.destroy();
 		client.close();
 		return true;
 	}
