@@ -14,6 +14,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.util.InputAdapter;
 
 import baerlion.ui.Button;
+import baerlion.models.Villager;
 
 public class BaerlionGame extends InputAdapter implements Game {
 	final BaerlionClient client;
@@ -71,7 +72,10 @@ public class BaerlionGame extends InputAdapter implements Game {
 			uiImages.get(count++).draw(b.x, b.y, b.w, b.h);
 		String timeString = "Day " + view.day + ", Step " + view.step;
 		hudFont.drawString(400, 10, timeString, Color.red);
-		consoleFont.drawString(100, 400, "testString", Color.red);
+		int vcount = 0;
+		int y = 50;
+		for (Villager v : view.villagers)
+			consoleFont.drawString(100, y + (40 * vcount++), v.toString(), Color.red);
 	}
 
 	public String getTitle() {
