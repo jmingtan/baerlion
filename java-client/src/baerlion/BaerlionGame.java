@@ -23,6 +23,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 	final List<Image> uiImages;
 	UnicodeFont hudFont = null;
 	UnicodeFont consoleFont = null;
+	boolean showConsole = false;
 
 	public BaerlionGame() {
 		client = new BaerlionClient();
@@ -35,7 +36,8 @@ public class BaerlionGame extends InputAdapter implements Game {
 		client.init();
 		hudFont = getFont("GoudyBookletter1911.otf", "goudy.hiero");
 		consoleFont = getFont("mplus-1p-regular.ttf", "mplus.hiero");
-		createButton("control_play_blue.png", 200, 10, 30, 30);
+		createButton("control_play_blue.png", "play", 200, 10, 30, 30);
+		createButton("application_xp_terminal.png", "console", 10, 440, 30, 30);
 	}
  
 	public void update(GameContainer gc, int delta) throws SlickException {
@@ -51,8 +53,8 @@ public class BaerlionGame extends InputAdapter implements Game {
 		return font;
 	}
 
-	public void createButton(String filename, int x, int y, int w, int h) throws SlickException {
-		buttons.add(new Button("play", x, y, w, h));
+	public void createButton(String filename, String buttonname, int x, int y, int w, int h) throws SlickException {
+		buttons.add(new Button(buttonname, x, y, w, h));
 		uiImages.add(new Image(filename));
 	}
 
@@ -74,8 +76,9 @@ public class BaerlionGame extends InputAdapter implements Game {
 		hudFont.drawString(400, 10, timeString, Color.red);
 		int vcount = 0;
 		int y = 50;
-		for (Villager v : view.villagers)
-			consoleFont.drawString(50, y + (40 * vcount++), v.toString(), Color.red);
+		if (showConsole)
+			for (Villager v : view.villagers)
+				consoleFont.drawString(50, y + (40 * vcount++), v.toString(), Color.red);
 	}
 
 	public String getTitle() {
@@ -92,6 +95,8 @@ public class BaerlionGame extends InputAdapter implements Game {
 	protected void command(String command) {
 		if (command.equals("play"))
 			client.command("step");
+		if (command.equals("console"))
+			showConsole = !showConsole;
 	}
  
 	@Override public void mousePressed(int button, int x, int y) {
