@@ -39,7 +39,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 	}
 
 	public void createButton(String filename, int x, int y, int w, int h) throws SlickException {
-		buttons.add(new Button(x, y, w, h));
+		buttons.add(new Button("play", x, y, w, h));
 		uiImages.add(new Image(filename));
 	}
 
@@ -67,11 +67,16 @@ public class BaerlionGame extends InputAdapter implements Game {
 		client.close();
 		return true;
 	}
+
+	protected void command(String command) {
+		if (command.equals("play"))
+			client.command("step");
+	}
  
 	@Override public void mousePressed(int button, int x, int y) {
 		for (Button b : buttons)
 			if (b.click(x, y))
-				System.out.println("button clicked!");
+				command(b.name);
 	}
 
 	public static void main(String[] args) throws SlickException {

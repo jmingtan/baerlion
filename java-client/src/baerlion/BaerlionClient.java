@@ -12,6 +12,7 @@ public class BaerlionClient {
 	BufferedReader in = null;
 	long startTime = 0;
 	boolean connected = false;
+	boolean play = false;
 
 	public void init() {
 		try {
@@ -35,8 +36,13 @@ public class BaerlionClient {
 		} catch (IOException e) { }
 	}
 
+	public void command(String command) {
+		if (connected)
+			out.println(command);
+	}
+
 	public String run() {
-		if (connected && System.currentTimeMillis() - startTime > 1000) {
+		if (connected && play && System.currentTimeMillis() - startTime > 1000) {
 			startTime = System.currentTimeMillis();
 			out.println("step");
 		}

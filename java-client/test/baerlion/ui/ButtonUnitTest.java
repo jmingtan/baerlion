@@ -8,7 +8,7 @@ public class ButtonUnitTest {
 	private Button object = null;
 
 	@Before public void before() {
-		object = new Button(0, 0, 0, 0);
+		object = new Button("", 0, 0, 0, 0);
 	}
 
 	@Test public void testClick() {
@@ -18,7 +18,7 @@ public class ButtonUnitTest {
 		int testY2 = 25;
 		int x = 20, y = 20;
 		int w = 10, h = 10;
-		object = new Button(x, y, w, h);
+		object = new Button("", x, y, w, h);
 
 		assertFalse(
 				"Button should not have been clicked",
