@@ -13,7 +13,7 @@ public class BaerlionViewUnitTest {
 		object = new BaerlionView();
 	}
 
-	@Test public void parseDay() {
+	@Test public void testParseDay() {
 		int expectedDay = 1;
 		int expectedStep = 4;
 		String testString = "Day {"+expectedDay+"}, Step {"+expectedStep+"}";
@@ -28,7 +28,7 @@ public class BaerlionViewUnitTest {
 				expectedStep, object.step);
 	}
 
-	@Test public void parseVillager() {
+	@Test public void testParseVillager() {
 		String name = "Villager #2";
 		String location = name + "'s field";
 		String action = "sowing";
