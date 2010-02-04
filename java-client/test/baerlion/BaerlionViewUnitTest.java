@@ -28,6 +28,30 @@ public class BaerlionViewUnitTest {
 				expectedStep, object.step);
 	}
 
+	@Test public void testAddOrReplaceVillager() {
+		String name = "Villager #2";
+		String location = "Location 1";
+		String location2 = "Location 2";
+		String action = "sowing";
+		String action2 = "action2";
+		Villager testVillager = new Villager(name, location, action);
+		Villager testVillager2 = new Villager(name, location2, action2);
+		object.addOrReplaceVillager(testVillager);
+		assertEquals(
+				"Villager list should have only 1 villager",
+				1, object.villagers.size());
+		assertEquals(
+				"Villager does not match expected value",
+				testVillager, object.villagers.get(0));
+		object.addOrReplaceVillager(testVillager2);
+		assertEquals(
+				"Villager list should have only 1 villager",
+				1, object.villagers.size());
+		assertEquals(
+				"Villager does not match expected value",
+				testVillager2, object.villagers.get(0));
+	}
+
 	@Test public void testParseVillager() {
 		String name = "Villager #2";
 		String location = name + "'s field";

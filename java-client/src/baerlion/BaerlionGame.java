@@ -75,7 +75,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 		int vcount = 0;
 		int y = 50;
 		for (Villager v : view.villagers)
-			consoleFont.drawString(100, y + (40 * vcount++), v.toString(), Color.red);
+			consoleFont.drawString(50, y + (40 * vcount++), v.toString(), Color.red);
 	}
 
 	public String getTitle() {

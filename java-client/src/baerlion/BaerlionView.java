@@ -69,6 +69,17 @@ public class BaerlionView {
 
 	protected void parseVillager(String villagerString) {
 		String[] elements = getElements(villagerString).toArray(new String[0]);
-		this.villagers.add(new Villager(elements[0], elements[2], elements[4]));
+		addOrReplaceVillager(new Villager(elements[0], elements[2], elements[4]));
+	}
+
+	protected void addOrReplaceVillager(Villager villager) {
+		boolean found = false;
+		for (Villager v : villagers)
+			if (v.equals(villager)) {
+				villagers.set(villagers.indexOf(v), villager);
+				found = true;
+				break;
+			}
+		if (!found) villagers.add(villager);
 	}
 }
