@@ -19,6 +19,7 @@ import baerlion.models.Villager;
 public class BaerlionGame extends InputAdapter implements Game {
 	final BaerlionClient client;
 	final BaerlionView view;
+	final BaerlionParser parser;
 	final List<Button> buttons;
 	final List<Image> uiImages;
 	UnicodeFont hudFont = null;
@@ -28,12 +29,14 @@ public class BaerlionGame extends InputAdapter implements Game {
 	public BaerlionGame() {
 		client = new BaerlionClient();
 		view = new BaerlionView();
+		parser = new BaerlionParser();
 		buttons = new Vector<Button>();
 		uiImages = new Vector<Image>();
 	}
  
 	public void init(GameContainer gc) throws SlickException {
 		client.init();
+		parser.listeners.add(view);
 		hudFont = getFont("GoudyBookletter1911.otf", "goudy.hiero");
 		consoleFont = getFont("mplus-1p-regular.ttf", "mplus.hiero");
 		createButton("control_play_blue.png", "play", 200, 10, 30, 30);
@@ -43,7 +46,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 	public void update(GameContainer gc, int delta) throws SlickException {
 		String response = client.run();
 		if (response != null)
-			view.parse(response);
+			parser.parse(response);
 	}
 
 	public UnicodeFont getFont(String fontFile, String hieroFile) throws SlickException {
@@ -66,7 +69,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 	}
  
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		fillRect(g, Color.green, 0, 0, gc.getWidth(), gc.getHeight());
+		fillRect(g, Color.black, 0, 0, gc.getWidth(), gc.getHeight());
 		for (ImageWrapper i : view.renderList)
 			i.draw();
 		int count = 0;

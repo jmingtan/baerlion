@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import baerlion.models.Villager;
 
-public class BaerlionView {
+public class BaerlionView implements BaerlionParserListener {
 	public final List<ImageWrapper> renderList;
 	public final List<Villager> villagers;
 	public int day;
@@ -16,63 +16,13 @@ public class BaerlionView {
 		villagers = new Vector<Villager>();
 	}
 
-	protected List<String> getElements(String response) {
-		List<String> elems = new Vector<String>();
-		while (hasElements(response)) {
-			String[] nextElem = getNextElement(response);
-			elems.add(nextElem[0]);
-			response = nextElem[1];
-		}
-		return elems;
+	public void timeParsed(int day, int step) {
+		this.day = day;
+		this.step = step;
 	}
 
-	protected String[] getNextElement(String testString) {
-		String[] result = new String[2];
-		if (hasVariables(testString)) {
-			if (testString.startsWith("{")) {
-				result[0] = testString.substring(1, testString.indexOf("}"));
-				result[1] = testString.substring(testString.indexOf("}") + 1);
-			}
-			else {
-				result[0] = testString.substring(0, testString.indexOf("{")).trim();
-				result[1] = testString.substring(testString.indexOf("{"));
-			}
-		}
-		else {
-			result[0] = testString;
-			result[1] = "";
-		}
-		return result;
-	}
-
-	protected boolean hasVariables(String testString) {
-		return testString.indexOf("{") >= 0 && testString.indexOf("}") >= 0;
-	}
-
-	protected boolean hasElements(String testString) {
-		return testString.length() > 0;
-	}
-
-	public void parse(String response) {
-		System.out.println("Response: " + response);
-		if (response.startsWith("Day"))
-			parseDay(response);
-		else if (response.contains("is at") && response.contains("and is"))
-			parseVillager(response);
-	}
-
-	protected void parseDay(String dayString) {
-		String[] elements = getElements(dayString).toArray(new String[0]);
-		this.day = Integer.parseInt(elements[1]);
-		this.step = Integer.parseInt(elements[3]);
-	}
-
-	protected void parseVillager(String villagerString) {
-		String[] elements = getElements(villagerString).toArray(new String[0]);
-		addOrReplaceVillager(new Villager(elements[0], elements[2], elements[4]));
-	}
-
-	protected void addOrReplaceVillager(Villager villager) {
+	public void villagerParsed(String name, String location, String action) {
+		Villager villager = new Villager(name, location, action);
 		boolean found = false;
 		for (Villager v : villagers)
 			if (v.equals(villager)) {
