@@ -22,6 +22,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 	final BaerlionParser parser;
 	final List<Button> buttons;
 	final List<Image> uiImages;
+	Image villager = null;
 	UnicodeFont hudFont = null;
 	UnicodeFont consoleFont = null;
 	boolean showConsole = false;
@@ -37,6 +38,7 @@ public class BaerlionGame extends InputAdapter implements Game {
 	public void init(GameContainer gc) throws SlickException {
 		client.init();
 		parser.listeners.add(view);
+		villager = new Image("greg.png");
 		hudFont = getFont("GoudyBookletter1911.otf", "goudy.hiero");
 		consoleFont = getFont("mplus-1p-regular.ttf", "mplus.hiero");
 		createButton("control_play_blue.png", "play", 200, 10, 30, 30);
@@ -69,9 +71,10 @@ public class BaerlionGame extends InputAdapter implements Game {
 	}
  
 	public void render(GameContainer gc, Graphics g) throws SlickException {
-		fillRect(g, Color.black, 0, 0, gc.getWidth(), gc.getHeight());
+		fillRect(g, Color.white, 0, 0, gc.getWidth(), gc.getHeight());
 		for (ImageWrapper i : view.renderList)
 			i.draw();
+		villager.draw(100, 100);
 		int count = 0;
 		for (Button b : buttons)
 			uiImages.get(count++).draw(b.x, b.y, b.w, b.h);
