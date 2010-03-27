@@ -2,6 +2,7 @@ import json
 import os
 import os.path
 import time
+import sys
 
 DATA_DIR = "data"
 
@@ -39,6 +40,14 @@ def wait(interval):
     start = time.time()
     while time.time() - start < interval:
         pass
+
+def log(data):
+    """Sends data to sys.__stdout__, in case sys.stdout has been redirected
+    """
+    temp_out = sys.stdout
+    sys.stdout = sys.__stdout__
+    print data
+    sys.stdout = temp_out
 
 if __name__ == '__main__':
     import doctest
