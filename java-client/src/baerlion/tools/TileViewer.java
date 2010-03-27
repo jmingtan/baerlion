@@ -63,7 +63,8 @@ public class TileViewer extends InputAdapter implements Game {
 
 	public int offsetY(int index) { return sheetY + index * tileHeight; }
 
-	@Override public void mouseMoved(int oldx, int oldy, int newx, int newy) {
+	@Override
+	public void mouseMoved(int oldx, int oldy, int newx, int newy) {
 		this.mouseX = newx;
 		this.mouseY = newy;
 		if (mouseClicked) {
@@ -72,7 +73,8 @@ public class TileViewer extends InputAdapter implements Game {
 		}
 	}
 
-	@Override public void mousePressed(int button, int x, int y) {
+	@Override
+	public void mousePressed(int button, int x, int y) {
 		this.mouseClicked = true;
 		if (isWithin(x, y, spriteSheet, sheetX, sheetY))
 			for (int i=0; i<spriteSheet.getHorizontalCount(); i++)
@@ -84,7 +86,8 @@ public class TileViewer extends InputAdapter implements Game {
 					}
 	}
 
-	@Override public void mouseReleased(int button, int x, int y) {
+	@Override
+	public void mouseReleased(int button, int x, int y) {
 		this.mouseClicked = false;
 	}
 

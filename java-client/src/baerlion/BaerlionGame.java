@@ -105,7 +105,8 @@ public class BaerlionGame extends InputAdapter implements Game {
 			showConsole = !showConsole;
 	}
  
-	@Override public void mousePressed(int button, int x, int y) {
+	@Override
+	public void mousePressed(int button, int x, int y) {
 		for (Button b : buttons)
 			if (b.click(x, y))
 				command(b.name);

@@ -11,7 +11,8 @@ public class Villager {
 		this.action = action;
 	}
 
-	@Override public String toString() {
+	@Override
+	public String toString() {
 		return name + " is at " + location + " and is " + action;
 	}
 

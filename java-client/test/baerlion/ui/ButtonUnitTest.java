@@ -7,11 +7,13 @@ import static org.junit.Assert.*;
 public class ButtonUnitTest {
 	private Button object = null;
 
-	@Before public void before() {
+	@Before
+	public void before() {
 		object = new Button("", 0, 0, 0, 0);
 	}
 
-	@Test public void testClick() {
+	@Test
+	public void testClick() {
 		int testX1 = 25;
 		int testY1 = 48;
 		int testX2 = 23;

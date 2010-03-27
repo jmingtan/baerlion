@@ -8,11 +8,13 @@ import static org.easymock.EasyMock.*;
 public class BaerlionParserUnitTest {
 	private BaerlionParser object = null;
 
-	@Before public void before() {
+	@Before
+	public void before() {
 		object = new BaerlionParser();
 	}
 
-	@Test public void testParseDay() {
+	@Test
+	public void testParseDay() {
 		int expectedDay = 1;
 		int expectedStep = 4;
 		String testString = "Day {"+expectedDay+"}, Step {"+expectedStep+"}";
@@ -26,7 +28,8 @@ public class BaerlionParserUnitTest {
 		verify(listener);
 	}
 
-	@Test public void testParseVillager() {
+	@Test
+	public void testParseVillager() {
 		String name = "Villager #2";
 		String location = name + "'s field";
 		String action = "sowing";
@@ -42,7 +45,8 @@ public class BaerlionParserUnitTest {
 		verify(listener);
 	}
 
-	@Test public void testGetElements() {
+	@Test
+	public void testGetElements() {
 		String testString = "{Villager #9's field} has now been {weeded}.";
 		String[] expected = {
 			"Villager #9's field", "has now been", "weeded", "."
@@ -52,7 +56,8 @@ public class BaerlionParserUnitTest {
 				expected, object.getElements(testString).toArray(new String[0]));
 	}
 
-	@Test public void testHasVariables() {
+	@Test
+	public void testHasVariables() {
 		String testString = "{Villager #9's field} has now been {weeded}.";
 		String testString2 = "A test string";
 
@@ -64,7 +69,8 @@ public class BaerlionParserUnitTest {
 				object.hasVariables(testString2));
 	}
 
-	@Test public void testHasElements() {
+	@Test
+	public void testHasElements() {
 		String testString = "{Villager #9's field} has now been {weeded}.";
 		String testString2 = "";
 
@@ -76,7 +82,8 @@ public class BaerlionParserUnitTest {
 				object.hasElements(testString2));
 	}
 
-	@Test public void testGetNextElement() {
+	@Test
+	public void testGetNextElement() {
 		String testString = "{Villager #9's field} has now been {weeded}.";
 		String[] expected1 = {"Villager #9's field", " has now been {weeded}."};
 		String[] expected2 = {"has now been", "{weeded}."};

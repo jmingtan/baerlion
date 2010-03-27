@@ -9,11 +9,13 @@ import baerlion.models.Villager;
 public class BaerlionViewUnitTest {
 	private BaerlionView object = null;
 
-	@Before public void before() {
+	@Before
+	public void before() {
 		object = new BaerlionView();
 	}
 
-	@Test public void testParseVillager() {
+	@Test
+	public void testParseVillager() {
 		String name = "Villager #2";
 		String location = "Location 1";
 		String location2 = "Location 2";
@@ -37,7 +39,8 @@ public class BaerlionViewUnitTest {
 				testVillager2.equals(object.villagers.get(0)));
 	}
 
-	@Test public void testTimeParsed() {
+	@Test
+	public void testTimeParsed() {
 		int testDay = 1;
 		int testStep = 2;
 		object.timeParsed(testDay, testStep);
