@@ -12,6 +12,7 @@
 	<property name="lib.natives" value="${dir.lib}/natives" />
 
 	<property name="main" value="baerlion.BaerlionGame" />
+	<property name="viewer" value="baerlion.tools.TileViewer" />
 	<property name="jarfile" value="baerlion.jar" />
 	<property name="distfile" value="baerlion.zip" />
 	
@@ -55,6 +56,13 @@
 	
 	<target name="run" depends="build">
 		<java fork="yes" spawn="no" classname="${main}">
+			<classpath refid="classpath" />
+			<jvmarg value="-Djava.library.path=${lib.natives}" />
+		</java>
+	</target>
+
+	<target name="run-viewer" depends="build">
+		<java fork="yes" spawn="no" classname="${viewer}">
 			<classpath refid="classpath" />
 			<jvmarg value="-Djava.library.path=${lib.natives}" />
 		</java>
